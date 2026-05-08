@@ -1,0 +1,394 @@
+/* 全局：简约清爽、响应式 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --text: #1a1d26;
+  --muted: #5c6370;
+  --primary: #3d6ee8;
+  --primary-hover: #2d5ad4;
+  --success: #2d9d5c;
+  --border: #e2e6ef;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(26, 29, 38, 0.08);
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: var(--shadow);
+}
+
+.logo {
+  margin: 0 0 0.85rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.nav-tab:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.nav-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+.panel {
+  display: none;
+  animation: fadeIn 0.25s ease;
+}
+
+.panel.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.hint {
+  margin: 0 0 1.25rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.row label[for] {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+select {
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 0.95rem;
+  min-width: 140px;
+}
+
+.file-btn {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* 透明覆盖在按钮上，避免部分浏览器对 hidden 文件框不响应 */
+.file-btn .file-input-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 0;
+  z-index: 2;
+}
+
+.file-btn span {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.file-btn input:focus + span,
+.file-btn span:hover {
+  border-color: var(--primary);
+  background: #eef2ff;
+}
+
+.file-name {
+  font-size: 0.875rem;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.btn {
+  border: none;
+  padding: 0.55rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn.primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn.primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn.success {
+  background: var(--success);
+  color: #fff;
+}
+
+.btn.success:hover {
+  filter: brightness(1.05);
+}
+
+.btn.toggle {
+  background: var(--bg);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.btn.toggle.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.bg-toggle {
+  align-items: center;
+}
+
+.progress {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.progress-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--primary), #7c9ef0);
+  width: 0%;
+  transition: width 0.2s ease;
+}
+
+.progress-bar.indeterminate {
+  width: 40%;
+  animation: indet 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes indet {
+  from {
+    margin-left: 0;
+    width: 30%;
+  }
+  to {
+    margin-left: 60%;
+    width: 40%;
+  }
+}
+
+.progress-text {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.error {
+  color: #c0392b;
+  font-size: 0.875rem;
+  margin: 0.5rem 0 0;
+}
+
+.result {
+  margin-top: 1rem;
+}
+
+.preview-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.preview-row.single {
+  grid-template-columns: 1fr;
+}
+
+.preview-box {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-height: 160px;
+  background: repeating-conic-gradient(#f0f0f0 0% 25%, #fff 0% 50%) 50% / 16px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.preview-box.large {
+  min-height: auto;
+}
+
+.preview-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 8px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.preview-box img,
+.photo-canvas {
+  max-width: 100%;
+  max-height: 280px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: none;
+}
+
+.preview-box img.visible,
+.photo-canvas.visible {
+  display: block;
+}
+
+.photo-canvas {
+  max-height: none;
+  width: 240px;
+  height: 320px;
+  image-rendering: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.preview-placeholder {
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.preview-placeholder.hidden {
+  display: none;
+}
+
+.meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0.5rem 0 0;
+}
+
+.site-footer {
+  text-align: center;
+  padding: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  background: var(--card);
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .preview-row {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-canvas {
+    width: min(100%, 240px);
+    height: auto;
+    aspect-ratio: 480 / 640;
+  }
+}

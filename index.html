@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>在线文档图片格式转换工具</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- 依赖库：文档 / 图片 / 证件照处理 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/7.1.2/turndown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="logo">文档 · 图片 · 证件照</h1>
+    <nav class="nav-tabs" role="tablist" aria-label="功能模块">
+      <button type="button" class="nav-tab active" data-panel="doc" role="tab" aria-selected="true">文字文档转换</button>
+      <button type="button" class="nav-tab" data-panel="image" role="tab" aria-selected="false">图片格式转换</button>
+      <button type="button" class="nav-tab" data-panel="photo" role="tab" aria-selected="false">四六级证件照生成</button>
+    </nav>
+  </header>
+
+  <main class="main">
+    <!-- 模块一：文档 -->
+    <section id="panel-doc" class="panel active" role="tabpanel" aria-labelledby="tab-doc">
+      <div class="card">
+        <h2>文字文档格式互转</h2>
+        <p class="hint">支持 .txt、.md、.docx、.pdf、.rtf；旧版 .doc 请先在 Word 中另存为 .docx 后上传。转换在本地浏览器完成。</p>
+        <div class="row">
+          <label class="file-btn">
+            <input type="file" id="doc-file" class="file-input-native" accept=".txt,.md,.docx,.doc,.pdf,.rtf,text/plain,text/markdown,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/pdf,application/rtf,text/rtf" />
+            <span>选择文件</span>
+          </label>
+          <span id="doc-file-name" class="file-name">未选择文件</span>
+        </div>
+        <div class="row">
+          <label for="doc-target">导出格式</label>
+          <select id="doc-target">
+            <option value="txt">.txt</option>
+            <option value="md">.md</option>
+            <option value="docx">.docx</option>
+            <option value="pdf">.pdf</option>
+            <option value="rtf">.rtf</option>
+          </select>
+        </div>
+        <button type="button" id="doc-convert" class="btn primary">开始转换</button>
+        <div id="doc-progress" class="progress" hidden>
+          <div class="progress-bar"></div>
+          <span class="progress-text">准备中…</span>
+        </div>
+        <p id="doc-error" class="error" role="alert" hidden></p>
+        <div id="doc-result" class="result" hidden>
+          <button type="button" id="doc-download" class="btn success">下载转换结果</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 模块二：图片 -->
+    <section id="panel-image" class="panel" role="tabpanel" hidden>
+      <div class="card">
+        <h2>图片格式互转</h2>
+        <p class="hint">支持 JPG、PNG、WebP、HEIC、BMP、GIF（静态）；导出为 JPG / PNG / WebP。</p>
+        <div class="row">
+          <label class="file-btn">
+            <input type="file" id="img-file" class="file-input-native" accept=".jpg,.jpeg,.png,.webp,.heic,.bmp,.gif,image/*" />
+            <span>选择图片</span>
+          </label>
+          <span id="img-file-name" class="file-name">未选择图片</span>
+        </div>
+        <div class="preview-row">
+          <div class="preview-box">
+            <span class="preview-label">原图</span>
+            <img id="img-preview-src" alt="原图预览" />
+            <span class="preview-placeholder" id="img-preview-src-ph">上传后显示</span>
+          </div>
+          <div class="preview-box">
+            <span class="preview-label">转换后</span>
+            <img id="img-preview-out" alt="转换结果预览" />
+            <span class="preview-placeholder" id="img-preview-out-ph">转换后显示</span>
+          </div>
+        </div>
+        <div class="row">
+          <label for="img-target">导出格式</label>
+          <select id="img-target">
+            <option value="image/jpeg">JPG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+        <button type="button" id="img-convert" class="btn primary">开始转换</button>
+        <div id="img-progress" class="progress" hidden>
+          <div class="progress-bar indeterminate"></div>
+          <span class="progress-text">处理中…</span>
+        </div>
+        <p id="img-error" class="error" role="alert" hidden></p>
+        <div id="img-result" class="result" hidden>
+          <button type="button" id="img-download" class="btn success">下载图片</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 模块三：四六级证件照 -->
+    <section id="panel-photo" class="panel" role="tabpanel" hidden>
+      <div class="card">
+        <h2>英语四六级证件照</h2>
+        <p class="hint">目标：480×640 像素、JPG、建议 20KB–100KB；白底 / 蓝底一键切换。人像分割需加载网络模型（首次可能较慢）。</p>
+        <div class="row">
+          <label class="file-btn">
+            <input type="file" id="photo-file" class="file-input-native" accept="image/*" />
+            <span>上传免冠正脸照</span>
+          </label>
+          <span id="photo-file-name" class="file-name">未选择</span>
+        </div>
+        <div class="row bg-toggle">
+          <span>背景</span>
+          <button type="button" class="btn toggle active" data-bg="white" id="bg-white">白底</button>
+          <button type="button" class="btn toggle" data-bg="blue" id="bg-blue">蓝底</button>
+        </div>
+        <div class="preview-row single">
+          <div class="preview-box large">
+            <span class="preview-label">生成预览（480×640）</span>
+            <canvas id="photo-canvas" width="480" height="640" class="photo-canvas"></canvas>
+            <span class="preview-placeholder" id="photo-ph">生成后显示</span>
+          </div>
+        </div>
+        <button type="button" id="photo-generate" class="btn primary">一键生成四六级证件照</button>
+        <div id="photo-progress" class="progress" hidden>
+          <div class="progress-bar indeterminate"></div>
+          <span class="progress-text">人像分割与压缩中…</span>
+        </div>
+        <p id="photo-error" class="error" role="alert" hidden></p>
+        <p id="photo-meta" class="meta" hidden></p>
+        <div id="photo-result" class="result" hidden>
+          <button type="button" id="photo-download" class="btn success">下载证件照</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>在线文档图片格式转换工具 · 本地处理，文件不上传服务器</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
